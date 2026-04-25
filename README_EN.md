@@ -184,6 +184,9 @@ cd web-ui && npm run build
 
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL_NAME`: required AI model settings.
 - `PROXY_URL`: dedicated HTTP/SOCKS5 proxy for AI requests.
+- `PROXY_IP`: unified proxy entry for scraper requests/browser launch (e.g. `http://user:pass@ip:port`), automatically injected into `HTTP_PROXY/HTTPS_PROXY` and Playwright `--proxy-server`.
+- `PLAYWRIGHT_STEALTH`: stealth toggle (default `true`) for downstream stealth scripts.
+- `PLAYWRIGHT_LAUNCH_ARGS`: extra browser launch flags, default includes `--disable-dev-shm-usage --no-sandbox` for Docker stability.
 - `RUN_HEADLESS`: whether the scraper runs headless; keep it `true` in Docker.
 - `SERVER_PORT`: backend port, default `8000`.
 - `LOGIN_IS_EDGE`: use Edge instead of Chrome locally; Docker images do not bundle Edge and always run with Chromium.
