@@ -7,6 +7,14 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      PROXY_IP: ${PROXY_IP:-}
+      PLAYWRIGHT_STEALTH: ${PLAYWRIGHT_STEALTH:-true}
+      PLAYWRIGHT_LAUNCH_ARGS: ${PLAYWRIGHT_LAUNCH_ARGS:---disable-dev-shm-usage --no-sandbox}
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     volumes:
       - .:/app
       - /app/dist
