@@ -47,6 +47,8 @@ docker compose up -d
 - Docker 镜像已内置 Chromium，无需宿主机额外安装浏览器。
 - 官方镜像地址：`ghcr.io/usagi-org/ai-goofish:latest`
 - 更新镜像：`docker compose pull && docker compose up -d`
+- 默认启用 `janitor` 清理服务：周期清理 `images/task_images_*` 临时目录与过期日志，降低长期运行磁盘膨胀风险。
+- 可用 `.env` 控制清理策略：`CLEANUP_INTERVAL_SEC`、`CLEANUP_IMAGE_MAX_AGE_HOURS`、`CLEANUP_LOG_MAX_AGE_DAYS`、`CLEANUP_JSONL_ENABLED`、`CLEANUP_JSONL_MAX_AGE_DAYS`。
 - 如果你修改了 `.env` 中的 `SERVER_PORT`，请同步更新 `docker-compose.yaml` 里的端口映射。
 - `docker-compose.yaml` 默认会把 SQLite 主库挂载到 `./data:/app/data`，数据库文件默认为 `data/app.sqlite3`
 - 目前默认持久化这些目录：
