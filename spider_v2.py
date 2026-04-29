@@ -12,44 +12,7 @@ from src.infrastructure.persistence.sqlite_task_repository import SqliteTaskRepo
 from src.scraper import scrape_xianyu
 
 
-def _configure_runtime_network_and_browser() -> None:
-    """
-    统一在进程启动时注入代理与浏览器参数，供下游爬虫/请求层复用。
-
-    - 支持通过 PROXY_IP 传入代理（如 http://user:pass@ip:port）
-    - 兼容常见 HTTP(S) 代理环境变量
-    - 默认追加 Docker 稳定性参数: --disable-dev-shm-usage / --no-sandbox
-    - 通过环境变量暴露 stealth 开关，供 Playwright 启动脚本读取
-    """
-    proxy_ip = os.getenv("PROXY_IP", "").strip()
-    if proxy_ip:
-        # 与既有 PROXY_URL 保持兼容，未设置时自动兜底
-        os.environ.setdefault("PROXY_URL", proxy_ip)
-        os.environ["HTTP_PROXY"] = proxy_ip
-        os.environ["HTTPS_PROXY"] = proxy_ip
-
-    launch_args_raw = os.getenv("PLAYWRIGHT_LAUNCH_ARGS", "").strip()
-    launch_args = [arg.strip() for arg in launch_args_raw.split() if arg.strip()]
-
-    required_args = ["--disable-dev-shm-usage", "--no-sandbox"]
-    for arg in required_args:
-        if arg not in launch_args:
-            launch_args.append(arg)
-
-    if proxy_ip and not any(arg.startswith("--proxy-server=") for arg in launch_args):
-        launch_args.append(f"--proxy-server={proxy_ip}")
-
-    if launch_args:
-        os.environ["PLAYWRIGHT_LAUNCH_ARGS"] = " ".join(launch_args)
-
-    # 下游若集成 playwright-stealth/自定义 stealth 脚本，可读取该标志
-    os.environ.setdefault("PLAYWRIGHT_STEALTH", "true")
-
-
-
 async def main():
-    _configure_runtime_network_and_browser()
-
     parser = argparse.ArgumentParser(
         description="闲鱼商品监控脚本，支持多任务配置和实时AI分析。",
         epilog="""

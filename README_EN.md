@@ -85,8 +85,6 @@ docker compose down
 - Default Web UI: `http://127.0.0.1:8000`
 - The published Docker image already includes Chromium, so no extra browser install is required on the host.
 - Update image: `docker compose pull && docker compose up -d`
-- `janitor` cleanup service is enabled by default to periodically remove temporary `images/task_images_*` folders and expired logs for long-running deployments.
-- Cleanup policy can be tuned via `.env`: `CLEANUP_INTERVAL_SEC`, `CLEANUP_IMAGE_MAX_AGE_HOURS`, `CLEANUP_LOG_MAX_AGE_DAYS`, `CLEANUP_JSONL_ENABLED`, `CLEANUP_JSONL_MAX_AGE_DAYS`.
 - If you change `SERVER_PORT` in `.env`, update the `ports` mapping in `docker-compose.yaml` as well.
 - `docker-compose.yaml` now mounts the primary SQLite database directory as `./data:/app/data`, with the default database file at `data/app.sqlite3`
 - These paths are persisted by default:
@@ -186,9 +184,6 @@ cd web-ui && npm run build
 
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL_NAME`: required AI model settings.
 - `PROXY_URL`: dedicated HTTP/SOCKS5 proxy for AI requests.
-- `PROXY_IP`: unified proxy entry for scraper requests/browser launch (e.g. `http://user:pass@ip:port`), automatically injected into `HTTP_PROXY/HTTPS_PROXY` and Playwright `--proxy-server`.
-- `PLAYWRIGHT_STEALTH`: stealth toggle (default `true`) for downstream stealth scripts.
-- `PLAYWRIGHT_LAUNCH_ARGS`: extra browser launch flags, default includes `--disable-dev-shm-usage --no-sandbox` for Docker stability.
 - `RUN_HEADLESS`: whether the scraper runs headless; keep it `true` in Docker.
 - `SERVER_PORT`: backend port, default `8000`.
 - `LOGIN_IS_EDGE`: use Edge instead of Chrome locally; Docker images do not bundle Edge and always run with Chromium.

@@ -1,19 +1,17 @@
 services:
   app:
-    image: ${APP_IMAGE:-ghcr.io/usagi-org/ai-goofish:latest}
+    # image: ${APP_IMAGE:-ghcr.io/usagi-org/ai-goofish:latest}
+    build: .
+    image: guanghang-hunter:local
     container_name: ai-goofish-monitor-app
-    pull_policy: always
-    init: 
+    # pull_policy: always
+    init: true
     ports:
       - "8000:8000"
     env_file:
       - .env
     environment:
       APP_DATABASE_FILE: /app/data/app.sqlite3
-      PROXY_IP: ${PROXY_IP:-}
-      PLAYWRIGHT_STEALTH: ${PLAYWRIGHT_STEALTH:-true}
-      PLAYWRIGHT_LAUNCH_ARGS: ${PLAYWRIGHT_LAUNCH_ARGS:---disable-dev-shm-usage --no-sandbox}
-
     volumes:
       - ./.env:/app/.env
       - ./data:/app/data
@@ -25,22 +23,3 @@ services:
       - ./images:/app/images
       - ./price_history:/app/price_history
     restart: unless-stopped
-
-  janitor:
-    image: alpine:3.20
-    container_name: ai-goofish-janitor
-    init: true
-    volumes:
-      - ./images:/app/images
-      - ./logs:/app/logs
-      - ./jsonl:/app/jsonl
-      - ./scripts/runtime_janitor.sh:/app/scripts/runtime_janitor.sh:ro
-    environment:
-      CLEANUP_INTERVAL_SEC: ${CLEANUP_INTERVAL_SEC:-1800}
-      CLEANUP_IMAGE_MAX_AGE_HOURS: ${CLEANUP_IMAGE_MAX_AGE_HOURS:-12}
-      CLEANUP_LOG_MAX_AGE_DAYS: ${CLEANUP_LOG_MAX_AGE_DAYS:-7}
-      CLEANUP_JSONL_ENABLED: ${CLEANUP_JSONL_ENABLED:-false}
-      CLEANUP_JSONL_MAX_AGE_DAYS: ${CLEANUP_JSONL_MAX_AGE_DAYS:-14}
-    command: ["/bin/sh", "/app/scripts/runtime_janitor.sh"]
-    restart: unless-stopped
-

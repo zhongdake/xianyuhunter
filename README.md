@@ -47,8 +47,6 @@ docker compose up -d
 - Docker 镜像已内置 Chromium，无需宿主机额外安装浏览器。
 - 官方镜像地址：`ghcr.io/usagi-org/ai-goofish:latest`
 - 更新镜像：`docker compose pull && docker compose up -d`
-- 默认启用 `janitor` 清理服务：周期清理 `images/task_images_*` 临时目录与过期日志，降低长期运行磁盘膨胀风险。
-- 可用 `.env` 控制清理策略：`CLEANUP_INTERVAL_SEC`、`CLEANUP_IMAGE_MAX_AGE_HOURS`、`CLEANUP_LOG_MAX_AGE_DAYS`、`CLEANUP_JSONL_ENABLED`、`CLEANUP_JSONL_MAX_AGE_DAYS`。
 - 如果你修改了 `.env` 中的 `SERVER_PORT`，请同步更新 `docker-compose.yaml` 里的端口映射。
 - `docker-compose.yaml` 默认会把 SQLite 主库挂载到 `./data:/app/data`，数据库文件默认为 `data/app.sqlite3`
 - 目前默认持久化这些目录：
@@ -199,9 +197,6 @@ cd web-ui && npm run build
 
 - `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL_NAME`：AI 模型接入必填项。
 - `PROXY_URL`：为 AI 请求单独指定 HTTP/SOCKS5 代理。
-- `PROXY_IP`：爬虫网络请求/浏览器启动统一代理入口（示例：`http://user:pass@ip:port`），会自动注入 `HTTP_PROXY/HTTPS_PROXY` 与 Playwright `--proxy-server`。
-- `PLAYWRIGHT_STEALTH`：是否启用隐身标记（默认 `true`，供下游 stealth 脚本读取）。
-- `PLAYWRIGHT_LAUNCH_ARGS`：浏览器附加参数，默认包含 `--disable-dev-shm-usage --no-sandbox`（Docker 强烈建议保留）。
 - `RUN_HEADLESS`：是否以无头模式运行爬虫；Docker 中应保持 `true`。
 - `SERVER_PORT`：后端监听端口，默认 `8000`。
 - `LOGIN_IS_EDGE`：本地环境可切换为 Edge 内核；Docker 镜像未内置 Edge，容器内会固定使用 Chromium。

@@ -29,9 +29,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     RUNNING_IN_DOCKER=true \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
-    TZ=Asia/Shanghai \
-    PLAYWRIGHT_STEALTH=true \
-    PLAYWRIGHT_LAUNCH_ARGS="--disable-dev-shm-usage --no-sandbox"
+    TZ=Asia/Shanghai
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 

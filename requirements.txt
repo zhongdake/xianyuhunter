@@ -1,6 +1,5 @@
 python-dotenv
 playwright
-playwright-stealth
 requests
 openai
 fastapi
